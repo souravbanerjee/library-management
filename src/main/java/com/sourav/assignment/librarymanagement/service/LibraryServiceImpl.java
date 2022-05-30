@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -55,6 +56,11 @@ public class LibraryServiceImpl implements LibraryService {
         int stock = book.getStock() - 1;
         book.setStock(stock);
         return libraryRepository.save(library);
+    }
+
+    @Override
+    public List<Library> returnBook(List<Library> list) throws Exception {
+        return null;
     }
 
 }

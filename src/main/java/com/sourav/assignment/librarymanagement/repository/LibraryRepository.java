@@ -39,4 +39,9 @@ public class LibraryRepository {
         return library;
     }
 
+    public List<Library> findByUserIdAndBookIdAndReturnDateIsNull(String userId,String bookId){
+
+        return null;
+    }
+
 }

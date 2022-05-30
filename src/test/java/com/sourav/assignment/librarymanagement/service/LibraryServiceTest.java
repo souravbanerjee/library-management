@@ -180,6 +180,70 @@ public class LibraryServiceTest {
         assertEquals(libraryRepository.findByUserIdAndReturnDateIsNull(userId).size() == 2, true);
     }
 
+    /*
+    Given, I have 2 books in my borrowed list
+    When, I return one book to the library
+    Then, the book is removed from my borrowed list
+    And, the library reflects the updated stock of the book
+     */
+    @Test
+    public void returnOneBook_Test() throws Exception {
+        String bookId1 = "1111";
+        String userId = "1122";
+        List<Library> list1 = new ArrayList<>();
+
+        LocalDate issueDate = LocalDate.of(2022, 05, 24);
+        list1.add(mockLibraryData(userId, bookId1, issueDate));
+        when(libraryRepository.findByUserIdAndBookIdAndReturnDateIsNull(userId, bookId1)).thenReturn(list1);
+
+        Book book1 = createBook("Java Programming", "H Sheildth", "TMC", "Programming", 4);
+        when(bookRepository.findById(bookId1)).thenReturn(book1);
+
+        List<Library> libraryList = new ArrayList<>();
+        libraryList.add(mockLibraryData(userId, bookId1, issueDate));
+
+        List<Library> library = libraryService.returnBook(libraryList);
+        assertEquals(library.get(0).getReturnDate(), LocalDate.now().toString());
+        assertEquals(book1.getStock() == 3, true);
+
+    }
+
+    /*
+    Given, I have 2 books in my borrowed list
+    When, I return both books to the library
+    Then, my borrowed list is empty
+    And, the library reflects the updated stock of the books
+     */
+    @Test
+    public void returnBothBooks_Test() throws Exception {
+        String bookId1 = "1111";
+        String bookId2 = "1112";
+        String userId = "1122";
+        List<Library> list1 = new ArrayList<>();
+        List<Library> list2 = new ArrayList<>();
+
+        LocalDate issueDate = LocalDate.of(2022, 05, 24);
+        list1.add(mockLibraryData(userId, bookId1, issueDate));
+        list2.add(mockLibraryData(userId, bookId2, issueDate));
+        when(libraryRepository.findByUserIdAndBookIdAndReturnDateIsNull(userId, bookId1)).thenReturn(list1);
+        when(libraryRepository.findByUserIdAndBookIdAndReturnDateIsNull(userId, bookId2)).thenReturn(list2);
+
+        Book book1 = createBook("Java Programming", "H Sheildth", "TMC", "Programming", 4);
+        Book book2 = createBook("D Programming", "J Kanitkar", "TMC", "Programming", 3);
+        when(bookRepository.findById(bookId1)).thenReturn(book1);
+        when(bookRepository.findById(bookId2)).thenReturn(book2);
+
+        List<Library> libraryList = new ArrayList<>();
+        libraryList.add(mockLibraryData(userId, bookId1, issueDate));
+        libraryList.add(mockLibraryData(userId, bookId2, issueDate));
+
+        List<Library> library = libraryService.returnBook(libraryList);
+        assertEquals(library.get(0).getReturnDate(), LocalDate.now().toString());
+        assertEquals(library.get(1).getReturnDate(), LocalDate.now().toString());
+        assertEquals(book1.getStock() == 3, true);
+        assertEquals(book2.getStock() == 2, true);
+    }
+
     private Book createBook(String name, String author, String publisher, String category, Integer stock) {
         return new Book(name, category, author, publisher, stock);
     }
