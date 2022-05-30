@@ -58,9 +58,23 @@ public class LibraryServiceImpl implements LibraryService {
         return libraryRepository.save(library);
     }
 
-    @Override
-    public List<Library> returnBook(List<Library> list) throws Exception {
-        return null;
+   @Override
+    public List<Library> returnBook(List<Library> list) throws Exception{
+
+        List<Library> returnedBooks = new ArrayList<>();
+        for(Library library : list){
+            Book book = bookRepository.findById(library.getBookId());
+            List<Library> libraryList = libraryRepository.findByUserIdAndBookIdAndReturnDateIsNull(library.getUserId(), library.getBookId());
+            if(libraryList.size()>0){
+                library = libraryList.get(0);
+                library.setReturnDate(LocalDate.now().toString());
+            }
+            returnedBooks.add(library);
+            int stock = book.getStock()-1;
+            book.setStock(stock);
+        }
+
+        return returnedBooks;
     }
 
 }
