@@ -26,11 +26,10 @@ public class BookRepository {
     }
 
     public Book findById(String id) {
-        return null;
+        return bookList.stream().filter(book -> book.getId().equals(id)).findFirst().get();
     }
 
     public List<Book> findAll() {
-
         return bookList;
     }
 
