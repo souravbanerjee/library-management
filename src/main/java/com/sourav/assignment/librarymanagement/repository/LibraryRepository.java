@@ -41,7 +41,9 @@ public class LibraryRepository {
 
     public List<Library> findByUserIdAndBookIdAndReturnDateIsNull(String userId,String bookId){
 
-        return null;
+        return libraryData.stream().filter(library -> library.getUserId().equals(userId)).filter(library -> library.getBookId().equals(bookId))
+                .filter(library -> (null==library.getReturnDate() || library.getReturnDate().isEmpty()))
+                .collect(Collectors.toList());
     }
 
 }
