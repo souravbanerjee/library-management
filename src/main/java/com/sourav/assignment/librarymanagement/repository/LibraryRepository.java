@@ -46,4 +46,7 @@ public class LibraryRepository {
                 .collect(Collectors.toList());
     }
 
+    public List<Library> findAll(){
+        return libraryData;
+    }
 }
